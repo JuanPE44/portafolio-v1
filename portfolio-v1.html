@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juan Peñalba</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #141210;
+      --bg-warm:   #1a1713;
+      --text:      #e8dfd0;
+      --muted:     #7a6e60;
+      --subtle:    #3a332a;
+      --green:     #7fb069;
+      --green-dim: #4a6e38;
+      --gold:      #c8855a;
+      --gold-dim:  #a0604a;
+      --rust:      #d4786a;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1.7;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ── LANG SWITCHER ── */
+    .lang-switcher {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 100;
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--subtle);
+      border-radius: 99px;
+      overflow: hidden;
+      background: var(--bg-warm);
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .lang-btn.active {
+      background: var(--subtle);
+      color: var(--text);
+    }
+
+    .lang-btn:hover:not(.active) {
+      color: var(--text);
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 5rem 2rem 10rem;
+    }
+
+    .header {
+      margin-bottom: 4.5rem;
+      text-align: left;
+    }
+
+    .header-name {
+      font-family: 'Lora', serif;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 0.4rem;
+    }
+
+    .header-role {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .header-bio {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: #a89880;
+      line-height: 1.75;
+      max-width: 480px;
+      border-left: 2px solid var(--green-dim);
+      padding-left: 1.1rem;
+    }
+
+    .links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 1.75rem;
+    }
+
+    .links a {
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--green);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 1px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .links a:hover {
+      color: #a8d48a;
+      border-bottom-color: var(--green-dim);
+    }
+
+    section { margin-bottom: 4rem; }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold-dim), transparent);
+    }
+
+    .item {
+      margin-bottom: 2.25rem;
+      padding-bottom: 2.25rem;
+      border-bottom: 1px dashed var(--subtle);
+    }
+
+    .item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .item-title {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .item-title a { color: var(--green); text-decoration: none; }
+    .item-title a:hover { color: #a8d48a; }
+
+    .item-period { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+    .item-company { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.6rem; }
+    .item-desc { font-size: 0.88rem; color: #b0a090; line-height: 1.75; }
+
+    .item-stack {
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      background: var(--bg-warm);
+      border: 1px solid var(--subtle);
+      color: var(--muted);
+      padding: 0.15rem 0.55rem;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      letter-spacing: 0.02em;
+    }
+
+    .metric { display: inline; color: var(--green); font-weight: 500; }
+
+    .item-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0.1rem 0 0;
+    }
+
+    .item-bullets li {
+      font-size: 0.88rem;
+      color: #b0a090;
+      line-height: 1.75;
+      padding: 0.2rem 0 0.2rem 1.1rem;
+      position: relative;
+    }
+
+    .item-bullets li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--green-dim);
+    }
+
+    .tech-row {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.83rem;
+      margin-bottom: 0.9rem;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .tech-cat {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    .tech-vals { color: #a09080; }
+
+    .edu-item { margin-bottom: 1.4rem; }
+
+    .edu-title {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.15rem;
+    }
+
+    .edu-sub { font-size: 0.78rem; color: var(--muted); }
+
+    .footer {
+      margin-top: 5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .footer a { color: var(--muted); text-decoration: none; }
+    .footer a:hover { color: var(--text); }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .header                        { animation: rise 0.6s ease both; animation-delay: 0s; }
+    section:nth-of-type(1)         { animation: rise 0.6s ease both; animation-delay: 0.1s; }
+    section:nth-of-type(2)         { animation: rise 0.6s ease both; animation-delay: 0.18s; }
+    section:nth-of-type(3)         { animation: rise 0.6s ease both; animation-delay: 0.26s; }
+    section:nth-of-type(4)         { animation: rise 0.6s ease both; animation-delay: 0.34s; }
+    .footer                        { animation: rise 0.6s ease both; animation-delay: 0.42s; }
+
+    .header-bio:empty { display: none; }
+    .wrap { transition: opacity 0.18s ease; }
+    .wrap.switching { opacity: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- LANG SWITCHER -->
+  <div class="lang-switcher">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="btn-es" onclick="setLang('es')">ES</button>
+  </div>
+
+  <div class="wrap" id="wrap">
+
+    <!-- HEADER -->
+    <header class="header">
+      <h1 class="header-name">Juan Peñalba</h1>
+      <p class="header-role">Software Developer &nbsp;·&nbsp; Buenos Aires, Argentina</p>
+      <p class="header-bio" id="bio"></p>
+      <nav class="links">
+        <a href="https://www.linkedin.com/in/juan-pe%C3%B1alba-0025b6246/" target="_blank">LinkedIn</a>
+        <a href="https://github.com/JuanPE44" target="_blank">GitHub</a>
+        <a href="https://x.com/Juanpealba9" target="_blank">X</a>
+        <a href="https://instagram.com" target="_blank">Instagram</a>
+        <a href="mailto:juantandil123@gmail.com" id="link-email"></a>
+      </nav>
+    </header>
+
+    <!-- EXPERIENCE -->
+    <section>
+      <h2 class="section-label" id="label-experience"></h2>
+
+      <div class="item">
+        <div class="item-top">
+          <span class="item-title" id="job1-title"></span>
+          <span class="item-period" id="job1-period"></span>
+        </div>
+        <p class="item-company">Chabit · <span id="job1-mode"></span></p>
+        <ul class="item-bullets" id="job1-bullets"></ul>
+        <div class="item-stack">
+          <span class="tag">Astro</span><span class="tag">React</span><span class="tag">React Native</span><span class="tag">Three.js</span><span class="tag">GSAP</span><span class="tag">Storybook</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="item-top">
+          <span class="item-title" id="job2-title"></span>
+          <span class="item-period" id="job2-period"></span>
+        </div>
+        <p class="item-company">Primarket · <span id="job2-mode"></span></p>
+        <ul class="item-bullets" id="job2-bullets"></ul>
+        <div class="item-stack">
+          <span class="tag">Next.js</span><span class="tag">Material UI</span><span class="tag">TypeScript</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section>
+      <h2 class="section-label" id="label-projects"></h2>
+
+      <div class="item">
+        <div class="item-top">
+          <span class="item-title"><a href="https://www.exactamente.com.ar" target="_blank">Exactamente ↗</a></span>
+          <span class="item-period">exactamente.com.ar</span>
+        </div>
+        <p class="item-company" id="proj1-meta"></p>
+        <p class="item-desc" id="proj1-desc"></p>
+        <div class="item-stack">
+          <span class="tag">React</span><span class="tag">Astro</span><span class="tag">Tailwind CSS</span><span class="tag">Node.js</span><span class="tag">Hono</span><span class="tag">Drizzle ORM</span><span class="tag">PostgreSQL</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-top">
+          <span class="item-title"><a href="https://ethglobal.com/showcase/poky-xiko4" target="_blank">Poky ↗</a></span>
+          <span class="item-period">ETHGlobal Buenos Aires</span>
+        </div>
+        <p class="item-company" id="proj2-meta"></p>
+        <p class="item-desc" id="proj2-desc"></p>
+        <div class="item-stack">
+          <span class="tag">Next.js</span><span class="tag">Solidity</span><span class="tag">IPFS</span><span class="tag">Wagmi</span><span class="tag">The Graph</span><span class="tag">Filecoin</span>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2 class="section-label" id="label-tech"></h2>
+      <div class="tech-row"><span class="tech-cat" id="cat-lang"></span><span class="tech-vals">TypeScript, JavaScript, Go, HTML, CSS</span></div>
+      <div class="tech-row"><span class="tech-cat">Frontend</span><span class="tech-vals">React, Astro, Next.js, Tailwind CSS, Material UI, React Native, Zustand</span></div>
+      <div class="tech-row"><span class="tech-cat">Backend</span><span class="tech-vals">Node.js, NestJS, Express, Hono</span></div>
+      <div class="tech-row"><span class="tech-cat" id="cat-3d"></span><span class="tech-vals">Three.js, GSAP, Spline</span></div>
+      <div class="tech-row"><span class="tech-cat" id="cat-tools"></span><span class="tech-vals">Git, Vercel, Figma, Vite, Storybook</span></div>
+      <div class="tech-row"><span class="tech-cat">Web3</span><span class="tech-vals">Solidity, Ethereum <span style="color: var(--muted)" id="learning-label"></span></span></div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section>
+      <h2 class="section-label" id="label-education"></h2>
+
+      <div class="edu-item">
+        <p class="edu-title" id="edu1-title"></p>
+        <p class="edu-sub">Universidad Nacional del Centro de la Provincia de Buenos Aires · 2024 – <span id="present-label"></span></p>
+      </div>
+
+      <div class="edu-item">
+        <p class="edu-title" id="edu2-title"></p>
+        <p class="edu-sub">Escuela Técnica N.º 2 Ing. Felipe Senillosa · 2020 – 2023</p>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <span>Juan Peñalba · Buenos Aires, Argentina</span>
+      <a href="mailto:juantandil123@gmail.com">juantandil123@gmail.com</a>
+    </footer>
+
+  </div>
+
+  <script>
+    const t = {
+      en: {
+        bio: '',
+        email: 'Email',
+        labelExperience: 'Experience',
+        labelProjects: 'Projects',
+        labelTech: 'Technologies',
+        labelEducation: 'Education',
+        job1Title: 'Software Developer',
+        job1Period: 'Sept 2025 – Present',
+        job1Mode: 'Hybrid',
+        job1Bullets: [
+          'Led website development using Astro and React, designing a scalable and performance-optimized architecture.',
+          'Implemented 3D visual experiences and advanced animations with Three.js, Spline and GSAP, applying lazy loading and resource optimization strategies.',
+          'Collaborated on UX/UI decisions ensuring visual and technical consistency between design and development.',
+          'Maintained direct communication and frequent meetings with clients, participating in product decisions and clearly conveying technical progress.',
+          'Developed an internal reusable UI component library with React and React Native, documented with Storybook and distributed as a private package via GitHub Packages.',
+        ],
+        job2Title: 'Frontend Developer',
+        job2Period: 'Jul 2025 – Present',
+        job2Mode: 'Remote',
+        job2Bullets: [
+          'Participated in Scrum teams developing and implementing web interfaces with Next.js and Material UI.',
+          'Built reusable components based on team specifications and feedback.',
+          'Developed scalable views, optimized performance, and ensured responsive and accessible layouts.',
+        ],
+        proj1Meta: 'Solo project · Active',
+        proj1Desc: 'Collaborative platform for university students to search, share and manage academic resources. <span class="metric">200+ daily users</span> and <span class="metric">4,000+ resources</span> uploaded by the community. Currently scaling to support multiple universities.',
+        proj2Meta: 'ETHGlobal Hackathon · Buenos Aires',
+        proj2Desc: 'Open knowledge protocol storing modular content on IPFS/Filecoin with on-chain metadata. I contributed to the idea and built the reference frontend — a Next.js app that reads modules and tracks directly from the protocol with no backend. Competed against teams from around the world at ETHGlobal Buenos Aires.',
+        catLang: 'Languages',
+        cat3d: '3D & Motion',
+        catTools: 'Tools',
+        learningLabel: '(learning)',
+        edu1Title: 'Systems Engineering',
+        edu2Title: 'Technical Degree in Computer Programming',
+        presentLabel: 'Present',
+      },
+      es: {
+        bio: '',
+        email: 'Email',
+        labelExperience: 'Experiencia',
+        labelProjects: 'Proyectos',
+        labelTech: 'Tecnologías',
+        labelEducation: 'Educación',
+        job1Title: 'Desarrollador de Software',
+        job1Period: 'Sept 2025 – Presente',
+        job1Mode: 'Híbrido',
+        job1Bullets: [
+          'Lideré el desarrollo del sitio web utilizando Astro y React, diseñando una arquitectura escalable y optimizada para performance.',
+          'Implementé experiencias visuales 3D y animaciones avanzadas con Three.js, Spline y GSAP, aplicando estrategias de carga diferida y optimización de recursos.',
+          'Colaboré en decisiones de UX/UI asegurando coherencia visual y técnica entre diseño y desarrollo.',
+          'Mantuve comunicación directa y reuniones frecuentes con clientes, participando en decisiones de producto y transmitiendo avances técnicos de forma clara.',
+          'Desarrollé una librería interna de componentes UI reutilizables con React y React Native, documentada con Storybook y distribuida como paquete privado a través de GitHub Packages.',
+        ],
+        job2Title: 'Desarrollador Frontend',
+        job2Period: 'Jul 2025 – Presente',
+        job2Mode: 'Remoto',
+        job2Bullets: [
+          'Participé en equipos Scrum desarrollando e implementando interfaces web con Next.js y Material UI.',
+          'Creé componentes reutilizables según especificaciones y feedback del equipo.',
+          'Construí vistas escalables, optimicé rendimiento y aseguré maquetación responsive y accesible.',
+        ],
+        proj1Meta: 'Proyecto personal · Activo',
+        proj1Desc: 'Plataforma colaborativa para estudiantes universitarios para buscar, compartir y gestionar recursos académicos. <span class="metric">200+ usuarios diarios</span> y <span class="metric">4.000+ recursos</span> subidos por la comunidad. Actualmente escalando para soportar múltiples universidades.',
+        proj2Meta: 'Hackathon ETHGlobal · Buenos Aires',
+        proj2Desc: 'Protocolo abierto de conocimiento que almacena contenido modular en IPFS/Filecoin con metadata on-chain. Participé en la idea y desarrollé el frontend de referencia — una app en Next.js que lee módulos y tracks directamente del protocolo sin backend. Competí contra equipos de todo el mundo en ETHGlobal Buenos Aires.',
+        catLang: 'Lenguajes',
+        cat3d: '3D & Animación',
+        catTools: 'Herramientas',
+        learningLabel: '(aprendiendo)',
+        edu1Title: 'Ingeniería de Sistemas',
+        edu2Title: 'Técnico en Programación',
+        presentLabel: 'Presente',
+      }
+    };
+
+    let current = 'en';
+
+    function setBullets(id, items) {
+      const ul = document.getElementById(id);
+      ul.innerHTML = items.map(i => `<li>${i}</li>`).join('');
+    }
+
+    function setLang(lang) {
+      if (lang === current) return;
+      current = lang;
+      const wrap = document.getElementById('wrap');
+      wrap.classList.add('switching');
+      setTimeout(() => {
+        applyLang(lang);
+        wrap.classList.remove('switching');
+      }, 180);
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+    }
+
+    function applyLang(lang) {
+      const d = t[lang];
+      document.getElementById('bio').textContent = d.bio;
+      document.getElementById('link-email').textContent = d.email;
+      document.getElementById('label-experience').textContent = d.labelExperience;
+      document.getElementById('label-projects').textContent = d.labelProjects;
+      document.getElementById('label-tech').textContent = d.labelTech;
+      document.getElementById('label-education').textContent = d.labelEducation;
+      document.getElementById('job1-title').textContent = d.job1Title;
+      document.getElementById('job1-period').textContent = d.job1Period;
+      document.getElementById('job1-mode').textContent = d.job1Mode;
+      setBullets('job1-bullets', d.job1Bullets);
+      document.getElementById('job2-title').textContent = d.job2Title;
+      document.getElementById('job2-period').textContent = d.job2Period;
+      document.getElementById('job2-mode').textContent = d.job2Mode;
+      setBullets('job2-bullets', d.job2Bullets);
+      document.getElementById('proj1-meta').textContent = d.proj1Meta;
+      document.getElementById('proj1-desc').innerHTML = d.proj1Desc;
+      document.getElementById('proj2-meta').textContent = d.proj2Meta;
+      document.getElementById('proj2-desc').textContent = d.proj2Desc;
+      document.getElementById('cat-lang').textContent = d.catLang;
+      document.getElementById('cat-3d').textContent = d.cat3d;
+      document.getElementById('cat-tools').textContent = d.catTools;
+      document.getElementById('learning-label').textContent = d.learningLabel;
+      document.getElementById('edu1-title').textContent = d.edu1Title;
+      document.getElementById('edu2-title').textContent = d.edu2Title;
+      document.getElementById('present-label').textContent = d.presentLabel;
+    }
+
+    applyLang('en');
+  </script>
+</body>
+</html>
