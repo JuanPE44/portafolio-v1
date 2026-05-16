@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,416 +7,193 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg-base:       #0A0E1A;
-      --bg-surface:    #111827;
-      --bg-card:       #1C2333;
-      --accent-cyan:   #00F5C4;
-      --accent-indigo: #5E5AFF;
-      --accent-pink:   #FF2D78;
-      --text-primary:  #E8EEF4;
-      --text-muted:    #AABCCE;
-      --border-color:  rgba(255, 255, 255, 0.08);
-    }
-
-    html { font-size: 16px; scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg-base);
-      color: var(--text-primary);
-      font-family: 'Inter', sans-serif;
-      line-height: 1.7;
-      padding: 0;
-      min-height: 100vh;
-    }
-
-    #prism-bg canvas { opacity: 0.18; }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      background-size: 200px;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.6;
-    }
-
-    /* ── LANG SWITCHER ── */
-    .lang-switcher {
-      position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
-      z-index: 100;
-      display: flex;
-      gap: 0;
-      border: 1px solid var(--border-color);
-      border-radius: 99px;
-      overflow: hidden;
-      background: var(--bg-surface);
-    }
-
-    .lang-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.35rem 0.75rem;
-      cursor: pointer;
-      transition: color 0.2s, background 0.2s;
-    }
-
-    .lang-btn.active {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-primary);
-    }
-
-    .lang-btn:hover:not(.active) {
-      color: var(--text-primary);
-    }
-
-    .wrap {
-      position: relative;
-      z-index: 1;
-      max-width: 620px;
-      margin: 0 auto;
-      padding: 5rem 2rem 10rem;
-    }
-
-    .header {
-      margin-bottom: 4.5rem;
-      text-align: left;
-    }
-
-    .header-name {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(2rem, 5vw, 2.8rem);
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      margin-bottom: 0.4rem;
-      background: linear-gradient(105deg, #94A3B8 0%, #ffffff 40%, #94A3B8 60%, #64748B 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .header-role {
-      font-size: 0.88rem;
-      font-weight: 400;
-      color: var(--text-muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .header-bio {
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      color: rgba(232, 238, 244, 0.82);
-      line-height: 1.75;
-      max-width: 480px;
-      border-left: 2px solid rgba(0, 245, 196, 0.4);
-      padding-left: 1.1rem;
-    }
-
-    .links {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-top: 1.75rem;
-    }
-
-    .links a {
-      font-size: 0.85rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-primary);
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      padding-bottom: 1px;
-      transition: border-color 0.2s, color 0.2s;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .links a:hover {
-      color: var(--text-primary);
-      border-bottom-color: rgba(255, 255, 255, 0.2);
-    }
-
-    section { margin-bottom: 4rem; }
-
-    .section-label {
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent-indigo);
-      margin-bottom: 1.75rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(to right, rgba(94, 90, 255, 0.4), transparent);
-    }
-
-    .item {
-      margin-bottom: 2.25rem;
-      padding-bottom: 2.25rem;
-      border-bottom: 1px dashed var(--border-color);
-    }
-
-    .item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
-    .item-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-bottom: 0.15rem;
-    }
-
-    .item-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1rem;
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-
-    .item-title a { color: var(--accent-cyan); text-decoration: none; }
-    .item-title a:hover { color: #7ffce0; }
-
-    .item-period { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; font-family: 'JetBrains Mono', monospace; }
-    .item-company { font-size: 0.83rem; color: var(--text-muted); margin-bottom: 0.6rem; }
-    .item-desc { font-size: 0.93rem; color: rgba(232, 238, 244, 0.82); line-height: 1.75; }
-
-    .item-stack {
-      margin-top: 0.6rem;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-
-    .tag {
-      background: rgba(94, 90, 255, 0.10);
-      border: 1px solid rgba(94, 90, 255, 0.25);
-      color: var(--text-muted);
-      padding: 0.15rem 0.55rem;
-      border-radius: 99px;
-      font-size: 0.72rem;
-      letter-spacing: 0.02em;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .metric { display: inline; color: var(--accent-cyan); font-weight: 500; }
-
-    .item-bullets {
-      list-style: none;
-      padding: 0;
-      margin: 0.1rem 0 0;
-    }
-
-    .item-bullets li {
-      font-size: 0.93rem;
-      color: rgba(232, 238, 244, 0.82);
-      line-height: 1.75;
-      padding: 0.2rem 0 0.2rem 1.1rem;
-      position: relative;
-    }
-
-    .item-bullets li::before {
-      content: '–';
-      position: absolute;
-      left: 0;
-      color: rgba(0, 245, 196, 0.5);
-    }
-
-    .tech-row {
-      display: flex;
-      gap: 0.75rem;
-      font-size: 0.88rem;
-      margin-bottom: 0.9rem;
-      align-items: baseline;
-      flex-wrap: wrap;
-    }
-
-    .tech-cat {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent-indigo);
-      min-width: 80px;
-      flex-shrink: 0;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .tech-vals { color: rgba(232, 238, 244, 0.82); }
-
-    .edu-item { margin-bottom: 1.4rem; }
-
-    .edu-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin-bottom: 0.15rem;
-    }
-
-    .edu-sub { font-size: 0.82rem; color: var(--text-muted); }
-
-    .footer {
-      margin-top: 5rem;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .footer a { color: var(--text-muted); text-decoration: none; }
-    .footer a:hover { color: var(--text-primary); }
-
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .header                        { animation: rise 0.6s ease both; animation-delay: 0s; }
-    section:nth-of-type(1)         { animation: rise 0.6s ease both; animation-delay: 0.1s; }
-    section:nth-of-type(2)         { animation: rise 0.6s ease both; animation-delay: 0.18s; }
-    section:nth-of-type(3)         { animation: rise 0.6s ease both; animation-delay: 0.26s; }
-    section:nth-of-type(4)         { animation: rise 0.6s ease both; animation-delay: 0.34s; }
-    .footer                        { animation: rise 0.6s ease both; animation-delay: 0.42s; }
-
-    .header-bio:empty { display: none; }
-    .wrap { transition: opacity 0.18s ease; }
-    .wrap.switching { opacity: 0; }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <!-- PRISM BACKGROUND -->
   <div id="prism-bg" style="position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;"></div>
 
-  <!-- LANG SWITCHER -->
-  <div class="lang-switcher">
-    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" id="btn-es" onclick="setLang('es')">ES</button>
+  <!-- STICKY NAV -->
+  <nav class="site-nav" aria-label="Site navigation">
+    <span class="site-nav-name">Juan Peñalba</span>
+    <ul class="site-nav-links">
+      <li><a href="#projects" id="nav-projects"></a></li>
+      <li><a href="#experience" id="nav-experience"></a></li>
+      <li><a href="#stack" id="nav-stack"></a></li>
+      <li><a href="#contact" id="nav-contact"></a></li>
+    </ul>
+  </nav>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button id="theme-btn" class="theme-btn" aria-label="Switch to light mode">☀</button>
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-es" onclick="setLang('es')">ES</button>
+    </div>
   </div>
 
   <div class="wrap" id="wrap">
+    <main>
 
-    <!-- HEADER -->
-    <header class="header">
-      <h1 class="header-name">Juan Peñalba</h1>
-      <p class="header-role">Software Developer &nbsp;·&nbsp; Buenos Aires, Argentina</p>
-      <p class="header-bio" id="bio"></p>
-      <nav class="links">
-        <a href="https://www.linkedin.com/in/juan-pe%C3%B1alba-0025b6246/" target="_blank">LinkedIn</a>
-        <a href="https://github.com/JuanPE44" target="_blank">GitHub</a>
-        <a href="https://x.com/Juanpealba9" target="_blank">X</a>
-        <a href="https://instagram.com" target="_blank">Instagram</a>
-        <a href="mailto:juantandil123@gmail.com" id="link-email"></a>
-      </nav>
-    </header>
-
-    <!-- EXPERIENCE -->
-    <section>
-      <h2 class="section-label" id="label-experience"></h2>
-
-      <div class="item">
-        <div class="item-top">
-          <span class="item-title" id="job1-title"></span>
-          <span class="item-period" id="job1-period"></span>
+      <!-- HERO -->
+      <header class="header" id="hero">
+        <div class="name-wrapper" id="name-wrapper">
+          <h1 class="header-name">Juan Peñalba</h1>
+          <span class="name-clone name-red" aria-hidden="true">Juan Peñalba</span>
+          <span class="name-clone name-blue" aria-hidden="true">Juan Peñalba</span>
         </div>
-        <p class="item-company">Chabit · <span id="job1-mode"></span></p>
-        <ul class="item-bullets" id="job1-bullets"></ul>
-        <div class="item-stack">
-          <span class="tag">Astro</span><span class="tag">React</span><span class="tag">React Native</span><span class="tag">Three.js</span><span class="tag">GSAP</span><span class="tag">Storybook</span>
-        </div>
-      </div>
+        <p class="header-role">Software Developer &nbsp;·&nbsp; Buenos Aires, Argentina</p>
+        <p class="header-bio" id="bio"></p>
+        <nav class="links" aria-label="Social links">
+          <a href="https://www.linkedin.com/in/juan-pe%C3%B1alba-0025b6246/" target="_blank" rel="noopener" aria-label="LinkedIn profile">LinkedIn</a>
+          <a href="https://github.com/JuanPE44" target="_blank" rel="noopener" aria-label="GitHub profile">GitHub</a>
+          <a href="https://x.com/Juanpealba9" target="_blank" rel="noopener" aria-label="X (Twitter) profile">X</a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram profile">Instagram</a>
+          <a href="mailto:juantandil123@gmail.com" id="link-email" aria-label="Send email"></a>
+        </nav>
+      </header>
 
-      <div class="item">
-        <div class="item-top">
-          <span class="item-title" id="job2-title"></span>
-          <span class="item-period" id="job2-period"></span>
-        </div>
-        <p class="item-company">Primarket · <span id="job2-mode"></span></p>
-        <ul class="item-bullets" id="job2-bullets"></ul>
-        <div class="item-stack">
-          <span class="tag">Next.js</span><span class="tag">Material UI</span><span class="tag">TypeScript</span>
-        </div>
-      </div>
-    </section>
+      <!-- PROJECTS -->
+      <section id="projects">
+        <h2 class="section-label" id="label-projects"></h2>
 
-    <!-- PROJECTS -->
-    <section>
-      <h2 class="section-label" id="label-projects"></h2>
+        <article class="project-card accent-cyan">
+          <p class="project-name">
+            <a href="https://www.exactamente.com.ar" target="_blank" rel="noopener" aria-label="Exactamente — opens in new tab">Exactamente ↗</a>
+          </p>
+          <p class="project-context" id="proj1-context"></p>
+          <div class="project-metrics">
+            <span class="pill">200+ daily users</span>
+            <span class="pill">4,000+ resources</span>
+          </div>
+          <p class="project-desc" id="proj1-desc"></p>
+          <div class="item-stack">
+            <span class="tag">React</span><span class="tag">Astro</span><span class="tag">Tailwind CSS</span><span class="tag">Node.js</span><span class="tag">Hono</span><span class="tag">Drizzle ORM</span><span class="tag">PostgreSQL</span>
+          </div>
+        </article>
 
-      <div class="item">
-        <div class="item-top">
-          <span class="item-title"><a href="https://www.exactamente.com.ar" target="_blank">Exactamente ↗</a></span>
-          <span class="item-period">exactamente.com.ar</span>
-        </div>
-        <p class="item-company" id="proj1-meta"></p>
-        <p class="item-desc" id="proj1-desc"></p>
-        <div class="item-stack">
-          <span class="tag">React</span><span class="tag">Astro</span><span class="tag">Tailwind CSS</span><span class="tag">Node.js</span><span class="tag">Hono</span><span class="tag">Drizzle ORM</span><span class="tag">PostgreSQL</span>
-        </div>
-      </div>
-      <div class="item">
-        <div class="item-top">
-          <span class="item-title"><a href="https://ethglobal.com/showcase/poky-xiko4" target="_blank">Poky ↗</a></span>
-          <span class="item-period">ETHGlobal Buenos Aires</span>
-        </div>
-        <p class="item-company" id="proj2-meta"></p>
-        <p class="item-desc" id="proj2-desc"></p>
-        <div class="item-stack">
-          <span class="tag">Next.js</span><span class="tag">Solidity</span><span class="tag">IPFS</span><span class="tag">Wagmi</span><span class="tag">The Graph</span><span class="tag">Filecoin</span>
-        </div>
-      </div>
-    </section>
-    <section>
-      <h2 class="section-label" id="label-tech"></h2>
-      <div class="tech-row"><span class="tech-cat" id="cat-lang"></span><span class="tech-vals">TypeScript, JavaScript, Go, HTML, CSS</span></div>
-      <div class="tech-row"><span class="tech-cat">Frontend</span><span class="tech-vals">React, Astro, Next.js, Tailwind CSS, Material UI, React Native, Zustand</span></div>
-      <div class="tech-row"><span class="tech-cat">Backend</span><span class="tech-vals">Node.js, NestJS, Express, Hono</span></div>
-      <div class="tech-row"><span class="tech-cat" id="cat-3d"></span><span class="tech-vals">Three.js, GSAP, Spline</span></div>
-      <div class="tech-row"><span class="tech-cat" id="cat-tools"></span><span class="tech-vals">Git, Vercel, Figma, Vite, Storybook</span></div>
-      <div class="tech-row"><span class="tech-cat">Web3</span><span class="tech-vals">Solidity, Ethereum <span style="color: var(--muted)" id="learning-label"></span></span></div>
-    </section>
+        <article class="project-card accent-indigo">
+          <p class="project-name">
+            <a href="https://ethglobal.com/showcase/poky-xiko4" target="_blank" rel="noopener" aria-label="Poky — opens in new tab">Poky ↗</a>
+          </p>
+          <p class="project-context" id="proj2-context"></p>
+          <p class="project-desc" id="proj2-desc"></p>
+          <div class="item-stack">
+            <span class="tag">Next.js</span><span class="tag">Solidity</span><span class="tag">IPFS</span><span class="tag">Wagmi</span><span class="tag">The Graph</span><span class="tag">Filecoin</span>
+          </div>
+        </article>
+      </section>
 
-    <!-- EDUCATION -->
-    <section>
-      <h2 class="section-label" id="label-education"></h2>
+      <!-- EXPERIENCE -->
+      <section id="experience">
+        <h2 class="section-label" id="label-experience"></h2>
+        <span class="concurrent-label" id="concurrent-label"></span>
 
-      <div class="edu-item">
-        <p class="edu-title" id="edu1-title"></p>
-        <p class="edu-sub">Universidad Nacional del Centro de la Provincia de Buenos Aires · 2024 – <span id="present-label"></span></p>
-      </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-item-top">
+              <span class="item-title" id="job1-title"></span>
+              <time class="item-period" id="job1-period" datetime="2025-09"></time>
+            </div>
+            <p class="item-company">Chabit · <span id="job1-mode"></span></p>
+            <ul class="item-bullets" id="job1-bullets"></ul>
+            <div class="item-stack">
+              <span class="tag">Astro</span><span class="tag">React</span><span class="tag">React Native</span><span class="tag">Three.js</span><span class="tag">GSAP</span><span class="tag">Storybook</span>
+            </div>
+          </div>
 
-      <div class="edu-item">
-        <p class="edu-title" id="edu2-title"></p>
-        <p class="edu-sub">Escuela Técnica N.º 2 Ing. Felipe Senillosa · 2020 – 2023</p>
+          <div class="timeline-item">
+            <div class="timeline-item-top">
+              <span class="item-title" id="job2-title"></span>
+              <time class="item-period" id="job2-period" datetime="2025-07"></time>
+            </div>
+            <p class="item-company">Primarket · <span id="job2-mode"></span></p>
+            <ul class="item-bullets" id="job2-bullets"></ul>
+            <div class="item-stack">
+              <span class="tag">Next.js</span><span class="tag">Material UI</span><span class="tag">TypeScript</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TECH STACK -->
+      <section id="stack">
+        <h2 class="section-label" id="label-tech"></h2>
+        <div class="tech-grid">
+
+          <div class="tech-category">
+            <p class="tech-cat-label" id="cat-lang"></p>
+            <div class="skill-row"><span class="skill-name">TypeScript</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
+            <div class="skill-row"><span class="skill-name">JavaScript</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
+            <div class="skill-row"><span class="skill-name">HTML / CSS</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Go</span><div class="depth-track"><div class="depth-bar depth-learning"></div></div></div>
+          </div>
+
+          <div class="tech-category">
+            <p class="tech-cat-label">Frontend</p>
+            <div class="skill-row"><span class="skill-name">React</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Next.js</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Astro</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Tailwind CSS</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
+          </div>
+
+          <div class="tech-category">
+            <p class="tech-cat-label">Backend</p>
+            <div class="skill-row"><span class="skill-name">Node.js</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
+            <div class="skill-row"><span class="skill-name">NestJS</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Express</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Drizzle ORM</span><div class="depth-track"><div class="depth-bar depth-learning"></div></div></div>
+          </div>
+
+          <div class="tech-category">
+            <p class="tech-cat-label" id="cat-3d"></p>
+            <div class="skill-row"><span class="skill-name">Three.js</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
+            <div class="skill-row"><span class="skill-name">GSAP</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Spline</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
+          </div>
+
+          <div class="tech-category">
+            <p class="tech-cat-label" id="cat-tools"></p>
+            <div class="skill-row"><span class="skill-name">Git</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Figma</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Vite</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
+          </div>
+
+          <div class="tech-category">
+            <p class="tech-cat-label">Web3</p>
+            <div class="skill-row"><span class="skill-name">Solidity</span><div class="depth-track"><div class="depth-bar depth-learning"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Ethereum</span><div class="depth-track"><div class="depth-bar depth-learning"></div></div></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- EDUCATION -->
+      <section id="education">
+        <h2 class="section-label" id="label-education"></h2>
+
+        <div class="edu-item">
+          <p class="edu-title" id="edu1-title"></p>
+          <p class="edu-sub">Universidad Nacional del Centro de la Provincia de Buenos Aires · <time datetime="2024">2024</time> – <span id="present-label"></span></p>
+        </div>
+
+        <div class="edu-item">
+          <p class="edu-title" id="edu2-title"></p>
+          <p class="edu-sub">Escuela Técnica N.º 2 Ing. Felipe Senillosa · <time datetime="2020">2020</time> – <time datetime="2023">2023</time></p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- CTA -->
+    <section class="cta-section" id="contact">
+      <h2 class="cta-heading" id="cta-heading"></h2>
+      <p class="cta-subtext" id="cta-subtext"></p>
+      <div class="cta-buttons">
+        <a href="mailto:juantandl123@gmail.com" class="btn-primary" id="cta-email"></a>
+        <a href="https://github.com/JuanPE44" class="btn-secondary" target="_blank" rel="noopener" aria-label="View GitHub profile" id="cta-github"></a>
       </div>
     </section>
 
@@ -428,135 +205,7 @@
 
   </div>
 
-  <script>
-    const t = {
-      en: {
-        bio: '',
-        email: 'Email',
-        labelExperience: 'Experience',
-        labelProjects: 'Projects',
-        labelTech: 'Technologies',
-        labelEducation: 'Education',
-        job1Title: 'Software Developer',
-        job1Period: 'Sept 2025 – Present',
-        job1Mode: 'Hybrid',
-        job1Bullets: [
-          'Led website development using Astro and React, designing a scalable and performance-optimized architecture.',
-          'Implemented 3D visual experiences and advanced animations with Three.js, Spline and GSAP, applying lazy loading and resource optimization strategies.',
-          'Collaborated on UX/UI decisions ensuring visual and technical consistency between design and development.',
-          'Maintained direct communication and frequent meetings with clients, participating in product decisions and clearly conveying technical progress.',
-          'Developed an internal reusable UI component library with React and React Native, documented with Storybook and distributed as a private package via GitHub Packages.',
-        ],
-        job2Title: 'Frontend Developer',
-        job2Period: 'Jul 2025 – Present',
-        job2Mode: 'Remote',
-        job2Bullets: [
-          'Participated in Scrum teams developing and implementing web interfaces with Next.js and Material UI.',
-          'Built reusable components based on team specifications and feedback.',
-          'Developed scalable views, optimized performance, and ensured responsive and accessible layouts.',
-        ],
-        proj1Meta: 'Solo project · Active',
-        proj1Desc: 'Collaborative platform for university students to search, share and manage academic resources. <span class="metric">200+ daily users</span> and <span class="metric">4,000+ resources</span> uploaded by the community. Currently scaling to support multiple universities.',
-        proj2Meta: 'ETHGlobal Hackathon · Buenos Aires',
-        proj2Desc: 'Open knowledge protocol storing modular content on IPFS/Filecoin with on-chain metadata. I contributed to the idea and built the reference frontend — a Next.js app that reads modules and tracks directly from the protocol with no backend. Competed against teams from around the world at ETHGlobal Buenos Aires.',
-        catLang: 'Languages',
-        cat3d: '3D & Motion',
-        catTools: 'Tools',
-        learningLabel: '(learning)',
-        edu1Title: 'Systems Engineering',
-        edu2Title: 'Technical Degree in Computer Programming',
-        presentLabel: 'Present',
-      },
-      es: {
-        bio: '',
-        email: 'Email',
-        labelExperience: 'Experiencia',
-        labelProjects: 'Proyectos',
-        labelTech: 'Tecnologías',
-        labelEducation: 'Educación',
-        job1Title: 'Desarrollador de Software',
-        job1Period: 'Sept 2025 – Presente',
-        job1Mode: 'Híbrido',
-        job1Bullets: [
-          'Lideré el desarrollo del sitio web utilizando Astro y React, diseñando una arquitectura escalable y optimizada para performance.',
-          'Implementé experiencias visuales 3D y animaciones avanzadas con Three.js, Spline y GSAP, aplicando estrategias de carga diferida y optimización de recursos.',
-          'Colaboré en decisiones de UX/UI asegurando coherencia visual y técnica entre diseño y desarrollo.',
-          'Mantuve comunicación directa y reuniones frecuentes con clientes, participando en decisiones de producto y transmitiendo avances técnicos de forma clara.',
-          'Desarrollé una librería interna de componentes UI reutilizables con React y React Native, documentada con Storybook y distribuida como paquete privado a través de GitHub Packages.',
-        ],
-        job2Title: 'Desarrollador Frontend',
-        job2Period: 'Jul 2025 – Presente',
-        job2Mode: 'Remoto',
-        job2Bullets: [
-          'Participé en equipos Scrum desarrollando e implementando interfaces web con Next.js y Material UI.',
-          'Creé componentes reutilizables según especificaciones y feedback del equipo.',
-          'Construí vistas escalables, optimicé rendimiento y aseguré maquetación responsive y accesible.',
-        ],
-        proj1Meta: 'Proyecto personal · Activo',
-        proj1Desc: 'Plataforma colaborativa para estudiantes universitarios para buscar, compartir y gestionar recursos académicos. <span class="metric">200+ usuarios diarios</span> y <span class="metric">4.000+ recursos</span> subidos por la comunidad. Actualmente escalando para soportar múltiples universidades.',
-        proj2Meta: 'Hackathon ETHGlobal · Buenos Aires',
-        proj2Desc: 'Protocolo abierto de conocimiento que almacena contenido modular en IPFS/Filecoin con metadata on-chain. Participé en la idea y desarrollé el frontend de referencia — una app en Next.js que lee módulos y tracks directamente del protocolo sin backend. Competí contra equipos de todo el mundo en ETHGlobal Buenos Aires.',
-        catLang: 'Lenguajes',
-        cat3d: '3D & Animación',
-        catTools: 'Herramientas',
-        learningLabel: '(aprendiendo)',
-        edu1Title: 'Ingeniería de Sistemas',
-        edu2Title: 'Técnico en Programación',
-        presentLabel: 'Presente',
-      }
-    };
-
-    let current = 'en';
-
-    function setBullets(id, items) {
-      const ul = document.getElementById(id);
-      ul.innerHTML = items.map(i => `<li>${i}</li>`).join('');
-    }
-
-    function setLang(lang) {
-      if (lang === current) return;
-      current = lang;
-      const wrap = document.getElementById('wrap');
-      wrap.classList.add('switching');
-      setTimeout(() => {
-        applyLang(lang);
-        wrap.classList.remove('switching');
-      }, 180);
-      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
-    }
-
-    function applyLang(lang) {
-      const d = t[lang];
-      document.getElementById('bio').textContent = d.bio;
-      document.getElementById('link-email').textContent = d.email;
-      document.getElementById('label-experience').textContent = d.labelExperience;
-      document.getElementById('label-projects').textContent = d.labelProjects;
-      document.getElementById('label-tech').textContent = d.labelTech;
-      document.getElementById('label-education').textContent = d.labelEducation;
-      document.getElementById('job1-title').textContent = d.job1Title;
-      document.getElementById('job1-period').textContent = d.job1Period;
-      document.getElementById('job1-mode').textContent = d.job1Mode;
-      setBullets('job1-bullets', d.job1Bullets);
-      document.getElementById('job2-title').textContent = d.job2Title;
-      document.getElementById('job2-period').textContent = d.job2Period;
-      document.getElementById('job2-mode').textContent = d.job2Mode;
-      setBullets('job2-bullets', d.job2Bullets);
-      document.getElementById('proj1-meta').textContent = d.proj1Meta;
-      document.getElementById('proj1-desc').innerHTML = d.proj1Desc;
-      document.getElementById('proj2-meta').textContent = d.proj2Meta;
-      document.getElementById('proj2-desc').textContent = d.proj2Desc;
-      document.getElementById('cat-lang').textContent = d.catLang;
-      document.getElementById('cat-3d').textContent = d.cat3d;
-      document.getElementById('cat-tools').textContent = d.catTools;
-      document.getElementById('learning-label').textContent = d.learningLabel;
-      document.getElementById('edu1-title').textContent = d.edu1Title;
-      document.getElementById('edu2-title').textContent = d.edu2Title;
-      document.getElementById('present-label').textContent = d.presentLabel;
-    }
-
-    applyLang('en');
-  </script>
+  <script src="main.js" defer></script>
 
   <script type="module">
     import { Renderer, Triangle, Program, Mesh } from 'https://esm.sh/ogl@1.0.11';
@@ -575,8 +224,6 @@
     const CFREQ = 1;
     const BLOOM = 1;
     const TS    = 0.5;
-    const HOVSTR = 2;
-    const INERT  = 0.05;
 
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const renderer = new Renderer({ dpr, alpha: true, antialias: false });
