@@ -3,9 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Juan Peñalba - Software Developer from Buenos Aires, Argentina. Portfolio featuring projects, experience and skills." />
+  <meta name="theme-color" content="#0A0E1A" />
+  <meta property="og:title" content="Juan Peñalba | Software Developer" />
+  <meta property="og:description" content="Portfolio of Juan Peñalba, Software Developer based in Buenos Aires, Argentina." />
+  <meta property="og:type" content="website" />
   <title>Juan Peñalba</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://esm.sh" />
+  <link rel="modulepreload" href="https://esm.sh/ogl@1.0.11" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -13,17 +20,6 @@
 
   <!-- PRISM BACKGROUND -->
   <div id="prism-bg" style="position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;"></div>
-
-  <!-- STICKY NAV -->
-  <nav class="site-nav" aria-label="Site navigation">
-    <span class="site-nav-name">Juan Peñalba</span>
-    <ul class="site-nav-links">
-      <li><a href="#projects" id="nav-projects"></a></li>
-      <li><a href="#experience" id="nav-experience"></a></li>
-      <li><a href="#stack" id="nav-stack"></a></li>
-      <li><a href="#contact" id="nav-contact"></a></li>
-    </ul>
-  </nav>
 
   <!-- CONTROLS -->
   <div class="controls">
@@ -38,7 +34,7 @@
     <main>
 
       <!-- HERO -->
-      <header class="header" id="hero">
+      <header class="header reveal" id="hero">
         <div class="name-wrapper" id="name-wrapper">
           <h1 class="header-name">Juan Peñalba</h1>
           <span class="name-clone name-red" aria-hidden="true">Juan Peñalba</span>
@@ -56,7 +52,7 @@
       </header>
 
       <!-- PROJECTS -->
-      <section id="projects">
+      <section id="projects" class="reveal">
         <h2 class="section-label" id="label-projects"></h2>
 
         <article class="project-card accent-cyan">
@@ -87,9 +83,8 @@
       </section>
 
       <!-- EXPERIENCE -->
-      <section id="experience">
+      <section id="experience" class="reveal">
         <h2 class="section-label" id="label-experience"></h2>
-        <span class="concurrent-label" id="concurrent-label"></span>
 
         <div class="timeline">
           <div class="timeline-item">
@@ -119,59 +114,59 @@
       </section>
 
       <!-- TECH STACK -->
-      <section id="stack">
+      <section id="stack" class="reveal">
         <h2 class="section-label" id="label-tech"></h2>
         <div class="tech-grid">
 
           <div class="tech-category">
             <p class="tech-cat-label" id="cat-lang"></p>
-            <div class="skill-row"><span class="skill-name">TypeScript</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
-            <div class="skill-row"><span class="skill-name">JavaScript</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
-            <div class="skill-row"><span class="skill-name">HTML / CSS</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
-            <div class="skill-row"><span class="skill-name">Go</span><div class="depth-track"><div class="depth-bar depth-learning"></div></div></div>
+            <div class="skill-row"><span class="skill-name">TypeScript</span></div>
+            <div class="skill-row"><span class="skill-name">JavaScript</span></div>
+            <div class="skill-row"><span class="skill-name">HTML / CSS</span></div>
+            <div class="skill-row"><span class="skill-name">Go</span></div>
           </div>
 
           <div class="tech-category">
             <p class="tech-cat-label">Frontend</p>
-            <div class="skill-row"><span class="skill-name">React</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
-            <div class="skill-row"><span class="skill-name">Next.js</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
-            <div class="skill-row"><span class="skill-name">Astro</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
-            <div class="skill-row"><span class="skill-name">Tailwind CSS</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
+            <div class="skill-row"><span class="skill-name">React</span></div>
+            <div class="skill-row"><span class="skill-name">Next.js</span></div>
+            <div class="skill-row"><span class="skill-name">Astro</span></div>
+            <div class="skill-row"><span class="skill-name">Tailwind CSS</span></div>
           </div>
 
           <div class="tech-category">
             <p class="tech-cat-label">Backend</p>
-            <div class="skill-row"><span class="skill-name">Node.js</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
-            <div class="skill-row"><span class="skill-name">NestJS</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
-            <div class="skill-row"><span class="skill-name">Express</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
-            <div class="skill-row"><span class="skill-name">Drizzle ORM</span><div class="depth-track"><div class="depth-bar depth-learning"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Node.js</span></div>
+            <div class="skill-row"><span class="skill-name">NestJS</span></div>
+            <div class="skill-row"><span class="skill-name">Express</span></div>
+            <div class="skill-row"><span class="skill-name">Drizzle ORM</span></div>
           </div>
 
           <div class="tech-category">
             <p class="tech-cat-label" id="cat-3d"></p>
-            <div class="skill-row"><span class="skill-name">Three.js</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
-            <div class="skill-row"><span class="skill-name">GSAP</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
-            <div class="skill-row"><span class="skill-name">Spline</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Three.js</span></div>
+            <div class="skill-row"><span class="skill-name">GSAP</span></div>
+            <div class="skill-row"><span class="skill-name">Spline</span></div>
           </div>
 
           <div class="tech-category">
             <p class="tech-cat-label" id="cat-tools"></p>
-            <div class="skill-row"><span class="skill-name">Git</span><div class="depth-track"><div class="depth-bar depth-daily"></div></div></div>
-            <div class="skill-row"><span class="skill-name">Figma</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
-            <div class="skill-row"><span class="skill-name">Vite</span><div class="depth-track"><div class="depth-bar depth-proficient"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Git</span></div>
+            <div class="skill-row"><span class="skill-name">Figma</span></div>
+            <div class="skill-row"><span class="skill-name">Vite</span></div>
           </div>
 
           <div class="tech-category">
             <p class="tech-cat-label">Web3</p>
-            <div class="skill-row"><span class="skill-name">Solidity</span><div class="depth-track"><div class="depth-bar depth-learning"></div></div></div>
-            <div class="skill-row"><span class="skill-name">Ethereum</span><div class="depth-track"><div class="depth-bar depth-learning"></div></div></div>
+            <div class="skill-row"><span class="skill-name">Solidity</span></div>
+            <div class="skill-row"><span class="skill-name">Ethereum</span></div>
           </div>
 
         </div>
       </section>
 
       <!-- EDUCATION -->
-      <section id="education">
+      <section id="education" class="reveal">
         <h2 class="section-label" id="label-education"></h2>
 
         <div class="edu-item">
@@ -188,7 +183,7 @@
     </main>
 
     <!-- CTA -->
-    <section class="cta-section" id="contact">
+    <section class="cta-section reveal" id="contact">
       <h2 class="cta-heading" id="cta-heading"></h2>
       <p class="cta-subtext" id="cta-subtext"></p>
       <div class="cta-buttons">
@@ -198,7 +193,7 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="footer">
+    <footer class="footer reveal">
       <span>Juan Peñalba · Buenos Aires, Argentina</span>
       <a href="mailto:juantandil123@gmail.com">juantandil123@gmail.com</a>
     </footer>
@@ -387,11 +382,17 @@
       scrollVelocity += dy * 0.00075 * dirSign;
     }, { passive: true });
 
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const render = () => {
-      scrollVelocity *= 0.90;
-      virtualTime += scrollVelocity;
-      program.uniforms.iTime.value = virtualTime;
-      renderer.render({ scene: mesh });
+      if (!isReducedMotion) {
+        scrollVelocity *= 0.90;
+        virtualTime += scrollVelocity;
+        program.uniforms.iTime.value = virtualTime;
+        renderer.render({ scene: mesh });
+      } else {
+        renderer.render({ scene: mesh });
+        return;
+      }
       requestAnimationFrame(render);
     };
     requestAnimationFrame(render);

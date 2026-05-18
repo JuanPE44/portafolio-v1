@@ -17,7 +17,7 @@ const t = {
       'Developed an internal reusable UI component library with React and React Native, documented with Storybook and distributed as a private package via GitHub Packages.',
     ],
     job2Title: 'Frontend Developer',
-    job2Period: 'Jul 2025 – Present',
+    job2Period: 'Apr 2025 – Sept 2025',
     job2Mode: 'Remote',
     job2Bullets: [
       'Participated in Scrum teams developing and implementing web interfaces with Next.js and Material UI.',
@@ -31,7 +31,6 @@ const t = {
     catLang: 'Languages',
     cat3d: '3D & Motion',
     catTools: 'Tools',
-    concurrentLabel: '2 simultaneous roles',
     ctaHeading: "Let's build something.",
     ctaSubtext: 'Open to full-time roles and freelance projects.',
     ctaEmail: 'Send an email',
@@ -64,7 +63,7 @@ const t = {
       'Desarrollé una librería interna de componentes UI reutilizables con React y React Native, documentada con Storybook y distribuida como paquete privado a través de GitHub Packages.',
     ],
     job2Title: 'Desarrollador Frontend',
-    job2Period: 'Jul 2025 – Presente',
+    job2Period: 'Abr 2025 – Sept 2025',
     job2Mode: 'Remoto',
     job2Bullets: [
       'Participé en equipos Scrum desarrollando e implementando interfaces web con Next.js y Material UI.',
@@ -78,7 +77,6 @@ const t = {
     catLang: 'Lenguajes',
     cat3d: '3D & Animación',
     catTools: 'Herramientas',
-    concurrentLabel: '2 roles simultáneos',
     ctaHeading: 'Construyamos algo.',
     ctaSubtext: 'Abierto a roles full-time y proyectos freelance.',
     ctaEmail: 'Enviar un email',
@@ -144,7 +142,6 @@ function applyLang(lang) {
   setText('cat-lang', d.catLang);
   setText('cat-3d', d.cat3d);
   setText('cat-tools', d.catTools);
-  setText('concurrent-label', d.concurrentLabel);
   setText('cta-heading', d.ctaHeading);
   setText('cta-subtext', d.ctaSubtext);
   setText('cta-email', d.ctaEmail);
@@ -165,6 +162,78 @@ function applyLang(lang) {
 
 applyLang('en');
 
+// ── GRADUAL BLUR ──
+function getGradDir(pos) {
+  return { top: 'to top', bottom: 'to bottom', left: 'to left', right: 'to right' }[pos];
+}
+
+function createGradualBlur(container, opts) {
+  const cfg = Object.assign({
+    position: 'bottom',
+    strength: 1,
+    height: '4rem',
+    divCount: 2,
+    exponential: false,
+    curve: 'bezier',
+    zIndex: 10
+  }, opts);
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = `
+    position: absolute; pointer-events: none;
+    height: ${cfg.height}; width: 100%;
+    ${cfg.position}: 0; left: 0; right: 0;
+    overflow: hidden; z-index: ${cfg.zIndex};
+  `;
+
+  const inner = document.createElement('div');
+  inner.style.cssText = 'position:relative;width:100%;height:100%;';
+
+  const curves = {
+    linear: p => p,
+    bezier: p => p * p * (3 - 2 * p),
+    'ease-in': p => p * p,
+    'ease-out': p => 1 - Math.pow(1 - p, 2)
+  };
+  const curveFn = curves[cfg.curve] || curves.bezier;
+  const inc = 100 / cfg.divCount;
+
+  for (let i = 1; i <= cfg.divCount; i++) {
+    const progress = curveFn(i / cfg.divCount);
+    const blurVal = cfg.exponential
+      ? Math.pow(2, progress * 4) * 0.0625 * cfg.strength
+      : 0.0625 * (progress * cfg.divCount + 1) * cfg.strength;
+
+    const p1 = Math.round((inc * i - inc) * 10) / 10;
+    const p2 = Math.round(inc * i * 10) / 10;
+    const p3 = Math.round((inc * i + inc) * 10) / 10;
+    const p4 = Math.round((inc * i + inc * 2) * 10) / 10;
+
+    let grad = `transparent ${p1}%, black ${p2}%`;
+    if (p3 <= 100) grad += `, black ${p3}%`;
+    if (p4 <= 100) grad += `, transparent ${p4}%`;
+
+    const dir = getGradDir(cfg.position);
+    const mask = `linear-gradient(${dir}, ${grad})`;
+
+    const d = document.createElement('div');
+    d.style.cssText = `
+      position: absolute; inset: 0;
+      mask-image: ${mask};
+      -webkit-mask-image: ${mask};
+      backdrop-filter: blur(${blurVal.toFixed(3)}rem);
+      -webkit-backdrop-filter: blur(${blurVal.toFixed(3)}rem);
+    `;
+    inner.appendChild(d);
+  }
+
+  wrap.appendChild(inner);
+  container.appendChild(wrap);
+}
+
+const prismBg = document.getElementById('prism-bg');
+if (prismBg) createGradualBlur(prismBg, { position: 'bottom', strength: 1, height: '6rem', divCount: 4 });
+
 // ── THEME TOGGLE ──
 (function () {
   const root = document.documentElement;
@@ -184,16 +253,19 @@ applyLang('en');
   });
 })();
 
-// ── STICKY NAV ──
-(function () {
-  const nav = document.querySelector('.site-nav');
-  const hero = document.getElementById('hero');
-  if (!nav || !hero) return;
-  const observer = new IntersectionObserver(
-    ([entry]) => nav.classList.toggle('visible', !entry.isIntersecting),
-    { threshold: 0 }
-  );
-  observer.observe(hero);
+
+// ── SCROLL REVEAL ──
+(function initScrollReveal() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -40px 0px', threshold: 0 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 })();
 
 // ── CHROMATIC ABERRATION ──
@@ -220,3 +292,4 @@ applyLang('en');
     wrapper.addEventListener('click', trigger);
   }
 })();
+
