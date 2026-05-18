@@ -42,8 +42,6 @@ const t = {
     edu1Title: 'Systems Engineering',
     edu2Title: 'Technical Degree in Computer Programming',
     presentLabel: 'Present',
-    themeLightLabel: 'Switch to light mode',
-    themeDarkLabel: 'Switch to dark mode',
   },
   es: {
     bio: '',
@@ -88,8 +86,6 @@ const t = {
     edu1Title: 'Ingeniería de Sistemas',
     edu2Title: 'Técnico en Programación',
     presentLabel: 'Presente',
-    themeLightLabel: 'Cambiar a modo claro',
-    themeDarkLabel: 'Cambiar a modo oscuro',
   }
 };
 
@@ -153,11 +149,6 @@ function applyLang(lang) {
   setText('edu1-title', d.edu1Title);
   setText('edu2-title', d.edu2Title);
   setText('present-label', d.presentLabel);
-  const themeBtn = document.getElementById('theme-btn');
-  if (themeBtn) {
-    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-    themeBtn.setAttribute('aria-label', isDark ? d.themeLightLabel : d.themeDarkLabel);
-  }
 }
 
 applyLang('en');
@@ -233,25 +224,6 @@ function createGradualBlur(container, opts) {
 
 const prismBg = document.getElementById('prism-bg');
 if (prismBg) createGradualBlur(prismBg, { position: 'bottom', strength: 1, height: '6rem', divCount: 4 });
-
-// ── THEME TOGGLE ──
-(function () {
-  const root = document.documentElement;
-  const btn = document.getElementById('theme-btn');
-  if (!btn) return;
-  const saved = localStorage.getItem('theme') || 'dark';
-  root.setAttribute('data-theme', saved);
-  btn.textContent = saved === 'dark' ? '☀' : '☾';
-
-  btn.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-    btn.textContent = next === 'dark' ? '☀' : '☾';
-    const d = t[current];
-    btn.setAttribute('aria-label', next === 'dark' ? d.themeLightLabel : d.themeDarkLabel);
-  });
-})();
 
 
 // ── SCROLL REVEAL ──

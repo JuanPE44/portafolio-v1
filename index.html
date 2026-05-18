@@ -23,7 +23,6 @@
 
   <!-- CONTROLS -->
   <div class="controls">
-    <button id="theme-btn" class="theme-btn" aria-label="Switch to light mode">☀</button>
     <div class="lang-switcher">
       <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
       <button class="lang-btn" id="btn-es" onclick="setLang('es')">ES</button>
@@ -373,20 +372,22 @@
     let virtualTime = Math.random() * 500;
     const dirSign = Math.random() > 0.5 ? 1 : -1;
 
-    let scrollVelocity = 0;
+    let rawVelocity = 0;
+    let smoothVelocity = 0;
     let lastScrollY = window.scrollY;
 
     window.addEventListener('scroll', () => {
       const dy = window.scrollY - lastScrollY;
       lastScrollY = window.scrollY;
-      scrollVelocity += dy * 0.00075 * dirSign;
+      rawVelocity += dy * 0.00075 * dirSign;
     }, { passive: true });
 
     const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const render = () => {
       if (!isReducedMotion) {
-        scrollVelocity *= 0.90;
-        virtualTime += scrollVelocity;
+        rawVelocity    *= 0.88;
+        smoothVelocity += (rawVelocity - smoothVelocity) * 0.10;
+        virtualTime    += smoothVelocity;
         program.uniforms.iTime.value = virtualTime;
         renderer.render({ scene: mesh });
       } else {
